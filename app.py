@@ -32,7 +32,7 @@ def notify_payment():
 @bot.on_callback_query()
 async def handle_callback_query(client, callback_query: CallbackQuery):
     global moderator_message_id
-    if callback_query.message.message_id == moderator_message_id:
+    if callback_query.message.id == moderator_message_id:
         if callback_query.data == "received":
             await callback_query.answer("Payment received!")
             update_website_status("Payment received!")
