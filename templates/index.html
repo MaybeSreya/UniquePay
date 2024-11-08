@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-100">
+    <div class="text-center">
+        <button id="payButton" 
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            I have paid
+        </button>
+        <div id="statusMessage" 
+             class="mt-4 text-lg text-gray-600"></div>
+    </div>
+
+    <script>
+        document.getElementById("payButton").addEventListener("click", function() {
+            fetch("/notify_payment", { method: "POST" })
+                .then(response => response.json())
+                .then(data => {
+                    const statusMessage = document.getElementById("statusMessage");
+                    statusMessage.textContent = data.message;
+                    statusMessage.classList.add("animate-bounce");
+                })
+                .catch(error => console.error("Error:", error));
+        });
+
+        setInterval(function() {
+            fetch("/get_latest_status")
+                .then(response => response.json())
+                .then(data => {
+                    const statusMessage = document.getElementById("statusMessage");
+                    statusMessage.textContent = data.message;
+                });
+        }, 3000);
+    </script>
+</body>
+</html>
