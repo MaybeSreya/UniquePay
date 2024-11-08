@@ -6,14 +6,18 @@
     <title>Payment Verification</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex items-center justify-center h-screen bg-gray-100">
-    <div class="text-center">
+<body class="flex items-center justify-center h-screen bg-gradient-to-b from-yellow-500 via-yellow-600 to-black">
+    <div class="relative text-center">
         <button id="payButton" 
                 class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
             I have paid
         </button>
-        <div id="statusMessage" 
-             class="mt-4 text-lg text-gray-600"></div>
+        
+        <!-- message box -->
+        <div id="messageBox" 
+             class="hidden mt-4 text-lg text-gray-200 bg-black bg-opacity-75 p-4 rounded shadow-md">
+            <p id="statusMessage" class="animate-bounce"></p>
+        </div>
     </div>
 
     <script>
@@ -21,18 +25,28 @@
             fetch("/notify_payment", { method: "POST" })
                 .then(response => response.json())
                 .then(data => {
+                    const payButton = document.getElementById("payButton");
+                    const messageBox = document.getElementById("messageBox");
                     const statusMessage = document.getElementById("statusMessage");
+
+                    //
+                    payButton.style.display = "none";
+                    messageBox.classList.remove("hidden");
                     statusMessage.textContent = data.message;
-                    statusMessage.classList.add("animate-bounce");
                 })
                 .catch(error => console.error("Error:", error));
         });
 
+        //
         setInterval(function() {
             fetch("/get_latest_status")
                 .then(response => response.json())
                 .then(data => {
+                    const messageBox = document.getElementById("messageBox");
                     const statusMessage = document.getElementById("statusMessage");
+
+                    //
+                    messageBox.classList.remove("hidden");
                     statusMessage.textContent = data.message;
                 });
         }, 3000);
