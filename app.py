@@ -26,7 +26,7 @@ def notify_payment():
             ]
         ])
     )
-    moderator_message_id = message.message_id
+    moderator_message_id = message.id
     return jsonify({"message": "Moderator will check your payments!"})
 
 @bot.on_callback_query()
